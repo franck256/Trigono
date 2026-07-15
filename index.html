@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Évaluation : Trigonométrie 3ème</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            background: white;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 4px solid #e67e22;
+            padding-bottom: 15px;
+            margin-top: 0;
+            font-size: 2.2em;
+        }
+        .step-panel {
+            display: none;
+        }
+        .step-panel.active {
+            display: block;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        input[type="text"] {
+            border: 3px solid #bdc3c7;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+            padding: 10px;
+        }
+        input[type="text"]:focus {
+            border-color: #e67e22;
+        }
+        
+        .consigne {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            line-height: 1.5;
+            background: #fdf5ee;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #e67e22;
+        }
+        
+        .enonce-container {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px dashed #e67e22;
+            text-align: left;
+            margin: 30px 0;
+            font-size: 1.25em;
+            line-height: 1.6;
+        }
+
+        .enonce-title {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .answer-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        .input-answer {
+            width: 250px;
+            height: 60px;
+            font-size: 2em !important;
+            font-weight: bold;
+            text-align: center;
+            border-width: 3px !important;
+            border-color: #e67e22 !important;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        button.action-btn {
+            flex: 1;
+            padding: 16px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-start { background-color: #e67e22; color: white; width: 100%; padding: 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.2em;}
+        .btn-start:hover { background-color: #d35400; }
+        .btn-submit { background-color: #2ecc71; color: white; }
+        .btn-submit:hover { background-color: #27ae60; }
+        .btn-skip { background-color: #94a3b8; color: white; }
+        .btn-skip:hover { background-color: #64748b; }
+        
+        .progress-bar {
+            background-color: #e2e8f0;
+            border-radius: 6px;
+            height: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #e67e22;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .indicator {
+            text-align: right;
+            font-size: 1.1em;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .result-box {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 6px solid #e67e22;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        
+        table.bilan {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+        table.bilan th, table.bilan td {
+            border: 1px solid #cbd5e1;
+            padding: 14px;
+            text-align: center;
+        }
+        table.bilan th {
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+        .row-correct { background-color: #dcfce7; color: #14532d; }
+        .row-incorrect { background-color: #fee2e2; color: #7f1d1d; }
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        .badge-success { background-color: #2ecc71; color: white; }
+    </style>
+</head>
+<body>
+
+    <h1>Évaluation : Trigonométrie (Niveau 3ème)</h1>
+
+    <!-- ÉTAPE 1 : Inscription -->
+    <div id="panel-login" class="step-panel active">
+        <label for="student-name">Prénom et Nom de l'élève :</label>
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="student-name" style="width:100%; height:50px; font-size:1.2em; padding:10px; box-sizing:border-box;" placeholder="Ex: Lucas Bernard">
+        </div>
+        <button class="btn-start" onclick="startTest()">Commencer l'évaluation (10 questions)</button>
+    </div>
+
+    <!-- ÉTAPE 2 : Exercices -->
+    <div id="panel-quiz" class="step-panel">
+        <div class="indicator">Question <span id="current-q">1</span> / 10</div>
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        
+        <div class="consigne" id="q-consigne">...</div>
+        
+        <div class="enonce-container">
+            <div class="enonce-title" id="q-concept">...</div>
+            <div id="q-text-container">...</div>
+        </div>
+        
+        <div class="answer-zone">
+            <label id="label-reponse" for="ans-value" style="font-size: 1.2em;">Écris ton résultat numérique ci-dessous :</label>
+            <input type="text" id="ans-value" class="input-answer" autocomplete="off">
+        </div>
+        
+        <div class="btn-group">
+            <button class="action-btn btn-skip" onclick="skipQuestion()">Passer</button>
+            <button class="action-btn btn-submit" onclick="submitAnswer()">Valider la réponse</button>
+        </div>
+    </div>
+
+    <!-- ÉTAPE 3 : Bilan -->
+    <div id="panel-results" class="step-panel">
+        <div class="result-box">
+            <p><strong>Élève :</strong> <span id="res-name">...</span></p>
+            <p><strong>Score :</strong> <span id="res-grade" style="font-size: 2.5em; color: #27ae60; font-weight: bold;">0 / 10</span></p>
+        </div>
+
+        <h3 style="margin-top:30px; color:#2c3e50; border-bottom:3px solid #cbd5e1; padding-bottom:8px; font-size:1.4em;">Correction détaillée</h3>
+        <table class="bilan">
+            <thead>
+                <tr>
+                    <th>Notion</th>
+                    <th>Énoncé du problème</th>
+                    <th>Ta réponse</th>
+                    <th>Correction / Méthode</th>
+                </tr>
+            </thead>
+            <tbody id="bilan-table-body">
+            </tbody>
+        </table>
+
+        <button class="btn-start" style="margin-top: 40px;" onclick="location.reload()">Refaire une autre évaluation</button>
+    </div>
+
+    <script>
+        let quizQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let studentName = "";
+        let isQuizActive = false;
+
+        function clean(str) {
+            if (!str) return "";
+            let cleanStr = str.trim().toLowerCase()
+                             .replace(/\s+/g, '')
+                             .replace(',', '.')
+                             .replace('cm', '')
+                             .replace('degres', '')
+                             .replace('degre', '')
+                             .replace('°', '');
+            const num = parseFloat(cleanStr);
+            return isNaN(num) ? cleanStr : num.toString();
+        }
+
+        function formatFR(num) {
+            return num.toString().replace('.', ',');
+        }
+
+        function getRandomTriangle() {
+            const alphabets = ["ABC", "DEF", "GHI", "JKL", "MNP", "RST"];
+            const choice = alphabets[Math.floor(Math.random() * alphabets.length)];
+            return [choice[0], choice[1], choice[2]];
+        }
+
+        function buildQuiz() {
+            try {
+                quizQuestions = [];
+                const pool = [
+                    "angle_cos", "angle_sin", "angle_tan", "angle_cos", "angle_sin",
+                    "cote_opp_sin", "cote_adj_cos", "cote_opp_tan", "cote_hyp_cos", "cote_hyp_sin"
+                ];
+
+                for (let i = 0; i < 10; i++) {
+                    const type = pool[i];
+                    const t = getRandomTriangle();
+
+                    if (type === "angle_cos") {
+                        const adj = Math.floor(Math.random() * 5) + 4; 
+                        const hyp = adj + Math.floor(Math.random() * 4) + 2; 
+                        const angleDeg = Math.round(Math.acos(adj / hyp) * (180 / Math.PI));
+
+                        quizQuestions.push({
+                            type: "Calcul de la mesure d'un angle",
+                            consigne: "Détermine la mesure de l'angle demandé. Arrondis au degré près.",
+                            enonce: `Dans le triangle ${t[0]}${t[1]}${t[2]} rectangle en ${t[0]} :<br>Le côté adjacent à l'angle en ${t[2]} est ${t[0]}${t[2]} = ${adj} cm.<br>L'hypoténuse est ${t[1]}${t[2]} = ${hyp} cm.<br>Calcule la mesure de l'angle [ ${t[0]}${t[2]}${t[1]} ].`,
+                            correctValue: angleDeg.toString(),
+                            explanation: `On cherche l'angle en ${t[2]}. On a le côté adjacent (${adj} cm) et l'hypoténuse (${hyp} cm).<br>Il faut utiliser le <strong>cosinus</strong> :<br>cos(${t[0]}${t[2]}${t[1]}) = ${adj} / ${hyp}<br>Angle = arccos(${adj}/${hyp}) ≈ <strong>${angleDeg}°</strong>.`
+                        });
+
+                    } else if (type === "angle_sin") {
+                        const opp = Math.floor(Math.random() * 5) + 4;
+                        const hyp = opp + Math.floor(Math.random() * 4) + 2;
+                        const angleDeg = Math.round(Math.asin(opp / hyp) * (180 / Math.PI));
+
+                        quizQuestions.push({
+                            type: "Calcul de la mesure d'un angle",
+                            consigne: "Détermine la mesure de l'angle demandé. Arrondis au degré près.",
+                            enonce: `Dans le triangle ${t[0]}${t[1]}${t[2]} rectangle en ${t[0]} :<br>Le côté opposé à l'angle en ${t[2]} est ${t[0]}${t[1]} = ${opp} cm.<br>L'hypoténuse est ${t[1]}${t[2]} = ${hyp} cm.<br>Calcule la mesure de l'angle [ ${t[0]}${t[2]}${t[1]} ].`,
+                            correctValue: angleDeg.toString(),
+                            explanation: `On cherche l'angle en ${t[2]}. On a le côté opposé (${opp} cm) et l'hypoténuse (${hyp} cm).<br>Il faut utiliser le <strong>sinus</strong> :<br>sin(${t[0]}${t[2]}${t[1]}) = ${opp} / ${hyp}<br>Angle = arcsin(${opp}/${hyp}) ≈ <strong>${angleDeg}°</strong>.`
+                        });
+
+                    } else if (type === "angle_tan") {
+                        const opp = Math.floor(Math.random() * 5) + 4;
+                        const adj = Math.floor(Math.random() * 5) + 4;
+                        const angleDeg = Math.round(Math.atan(opp / adj) * (180 / Math.PI));
+
+                        quizQuestions.push({
+                            type: "Calcul de la mesure d'un angle",
+                            consigne: "Détermine la mesure de l'angle demandé. Arrondis au degré près.",
+                            enonce: `Dans le triangle ${t[0]}${t[1]}${t[2]} rectangle en ${t[0]} :<br>Le côté opposé à l'angle en ${t[2]} est ${t[0]}${t[1]} = ${opp} cm.<br>Le côté adjacent est ${t[0]}${t[2]} = ${adj} cm.<br>Calcule la mesure de l'angle [ ${t[0]}${t[2]}${t[1]} ].`,
+                            correctValue: angleDeg.toString(),
+                            explanation: `On cherche l'angle en ${t[2]}. On a le côté opposé (${opp} cm) et le côté adjacent (${adj} cm).<br>Il faut utiliser la <strong>tangente</strong> :<br>tan(${t[0]}${t[2]}${t[1]}) = ${opp} / ${adj}<br>Angle = arctan(${opp}/${adj}) ≈ <strong>${angleDeg}°</strong>.`
+                        });
+
+                    } else if (type === "cote_opp_sin") {
+                        const angleDeg = [25, 35, 45, 55, 65][Math.floor(Math.random() * 5)];
+                        const hyp = Math.floor(Math.random() * 5) + 8; 
+                        const opp = hyp * Math.sin(angleDeg * Math.PI / 180);
+                        const roundedOpp = Math.round(opp * 10) / 10;
+
+                        quizQuestions.push({
+                            type: "Calcul de la longueur d'un côté",
+                            consigne: "Calcule la longueur demandée. Arrondis au dixième de cm.",
+                            enonce: `Dans le triangle ${t[0]}${t[1]}${t[2]} rectangle en ${t[0]} :<br>L'hypoténuse ${t[1]}${t[2]} = ${hyp} cm.<br>L'angle [ ${t[0]}${t[1]}${t[2]} ] mesure ${angleDeg}°.<br>Calcule la longueur du côté ${t[0]}${t[2]}.`,
+                            correctValue: formatFR(roundedOpp),
+                            correctValueAlternative: formatFR(roundedOpp.toFixed(1)),
+                            explanation: `On cherche le côté ${t[0]}${t[2]} qui est le côté opposé à l'angle connu (${angleDeg}°). On a l'hypoténuse (${hyp} cm).<br>On doit donc appliquer le <strong>sinus</strong> :<br>sin(${angleDeg}°) = ${t[0]}${t[2]} / ${hyp}<br>${t[0]}${t[2]} = ${hyp} × sin(${angleDeg}°) ≈ <strong>${formatFR(roundedOpp)} cm</strong>.`
+                        });
+
+                    } else if (type === "cote_adj_cos") {
+                        const angleDeg = [20, 30, 40, 50, 60][Math.floor(Math.random() * 5)];
+                        const hyp = Math.floor(Math.random() * 5) + 7;
+                        const adj = hyp * Math.cos(angleDeg * Math.PI / 180);
+                        const roundedAdj = Math.round(adj * 10) / 10;
+
+                        quizQuestions.push({
+                            type: "Calcul de la longueur d'un côté",
+                            consigne: "Calcule la longueur demandée. Arrondis au dixième de cm.",
+                            enonce: `Dans le triangle ${t[0]}${t[1]}${t[2]} rectangle en ${t[0]} :<br>L'hypoténuse ${t[1]}${t[2]} = ${hyp} cm.<br>L'angle [ ${t[0]}${t[1]}${t[2]} ] mesure ${angleDeg}°.<br>Calcule la longueur du côté ${t[0]}${t[1]}.`,
+                            correctValue: formatFR(roundedAdj),
+                            correctValueAlternative: formatFR(roundedAdj.toFixed(1)),
+                            explanation: `On cherche le côté ${t[0]}${t[1]} qui est le côté adjacent à l'angle connu (${angleDeg}°). On a l'hypoténuse (${hyp} cm).<br>On doit donc appliquer le <strong>cosinus</strong> :<br>cos(${angleDeg}°) = ${t[0]}${t[1]} / ${hyp}<br>${t[0]}${t[1]} = ${hyp} × cos(${angleDeg}°) ≈ <strong>${formatFR(roundedAdj)} cm</strong>.`
+                        });
+
+                    } else if (type === "cote_opp_tan") {
+                        const angleDeg = [30, 35, 45, 55, 60][Math.floor(Math.random() * 5)];
+                        const adj = Math.floor(Math.random() * 4) + 5;
+                        const opp = adj * Math.tan(angleDeg * Math.PI / 180);
+                        const roundedOpp = Math.round(opp * 10) / 10;
+
+                        quizQuestions.push({
+                            type: "Calcul de la longueur d'un côté",
+                            consigne: "Calcule la longueur demandée. Arrondis au dixième de cm.",
+                            enonce: `Dans le triangle ${t[0]}${t[1]}${t[2]} rectangle en ${t[0]} :<br>Le côté ${t[0]}${t[2]} mesure ${adj} cm.<br>L'angle [ ${t[0]}${t[2]}${t[1]} ] mesure ${angleDeg}°.<br>Calcule la longueur du côté ${t[0]}${t[1]}.`,
+                            correctValue: formatFR(roundedOpp),
+                            correctValueAlternative: formatFR(roundedOpp.toFixed(1)),
+                            explanation: `On cherche le côté ${t[0]}${t[1]} (côté opposé) et on a le côté adjacent ${t[0]}${t[2]} (${adj} cm).<br>On doit utiliser la <strong>tangente</strong> :<br>tan(${angleDeg}°) = ${t[0]}${t[1]} / ${adj}<br>${t[0]}${t[1]} = ${adj} × tan(${angleDeg}°) ≈ <strong>${formatFR(roundedOpp)} cm</strong>.`
+                        });
+
+                    } else if (type === "cote_hyp_cos") {
+                        const angleDeg = [25, 35, 45, 55][Math.floor(Math.random() * 4)];
+                        const adj = Math.floor(Math.random() * 4) + 4;
+                        const hyp = adj / Math.cos(angleDeg * Math.PI / 180);
+                        const roundedHyp = Math.round(hyp * 10) / 10;
+
+                        quizQuestions.push({
+                            type: "Calcul de la longueur d'un côté",
+                            consigne: "Calcule la longueur demandée. Arrondis au dixième de cm.",
+                            enonce: `Dans le triangle ${t[0]}${t[1]}${t[2]} rectangle en ${t[0]} :<br>Le côté adjacent ${t[0]}${t[1]} = ${adj} cm.<br>L'angle [ ${t[0]}${t[1]}${t[2]} ] mesure ${angleDeg}°.<br>Calcule la longueur de l'hypoténuse ${t[1]}${t[2]}.`,
+                            correctValue: formatFR(roundedHyp),
+                            correctValueAlternative: formatFR(roundedHyp.toFixed(1)),
+                            explanation: `On cherche l'hypoténuse ${t[1]}${t[2]} et on connaît le côté adjacent (${adj} cm).<br>On doit utiliser le <strong>cosinus</strong> :<br>cos(${angleDeg}°) = ${adj} / ${t[1]}${t[2]}<br>${t[1]}${t[2]} = ${adj} / cos(${angleDeg}°) ≈ <strong>${formatFR(roundedHyp)} cm</strong>.`
+                        });
+
+                    } else if (type === "cote_hyp_sin") {
+                        const angleDeg = [20, 30, 40, 50][Math.floor(Math.random() * 4)];
+                        const opp = Math.floor(Math.random() * 4) + 4;
+                        const hyp = opp / Math.sin(angleDeg * Math.PI / 180);
+                        const roundedHyp = Math.round(hyp * 10) / 10;
+
+                        quizQuestions.push({
+                            type: "Calcul de la longueur d'un côté",
+                            consigne: "Calcule la longueur demandée. Arrondis au dixième de cm.",
+                            enonce: `Dans le triangle ${t[0]}${t[1]}${t[2]} rectangle en ${t[0]} :<br>Le côté opposé ${t[0]}${t[2]} = ${opp} cm.<br>L'angle [ ${t[0]}${t[1]}${t[2]} ] mesure ${angleDeg}°.<br>Calcule la longueur de l'hypoténuse ${t[1]}${t[2]}.`,
+                            correctValue: formatFR(roundedHyp),
+                            correctValueAlternative: formatFR(roundedHyp.toFixed(1)),
+                            explanation: `On cherche l'hypoténuse ${t[1]}${t[2]} et on connaît le côté opposé (${opp} cm).<br>On doit utiliser le <strong>sinus</strong> :<br>sin(${angleDeg}°) = ${opp} / ${t[1]}${t[2]}<br>${t[1]}${t[2]} = ${opp} / sin(${angleDeg}°) ≈ <strong>${formatFR(roundedHyp)} cm</strong>.`
+                        });
+                    }
+                }
+                
+                quizQuestions.sort(() => 0.5 - Math.random());
+                
+            } catch (error) {
+                alert("Erreur lors de la création du quiz : " + error.message);
+            }
+        }
+
+        function startTest() {
+            try {
+                const nameInput = document.getElementById("student-name").value.trim();
+                if (nameInput === "") {
+                    alert("Veuillez entrer ton prénom et ton nom.");
+                    return;
+                }
+                studentName = nameInput;
+                buildQuiz();
+                
+                if (quizQuestions.length === 0) {
+                    alert("Erreur : Aucune question n'a pu être générée.");
+                    return;
+                }
+                
+                currentIndex = 0;
+                score = 0;
+                isQuizActive = true;
+                showPanel("panel-quiz");
+                loadQuestion();
+            } catch (err) {
+                alert("Erreur au démarrage : " + err.message);
+            }
+        }
+
+        function showPanel(panelId) {
+            document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(panelId).classList.add('active');
+        }
+
+        function loadQuestion() {
+            try {
+                if (currentIndex >= 10) {
+                    endTest();
+                    return;
+                }
+
+                const q = quizQuestions[currentIndex];
+                document.getElementById("current-q").innerText = currentIndex + 1;
+                document.getElementById("q-consigne").innerText = q.consigne;
+                document.getElementById("q-concept").innerText = q.type;
+                document.getElementById("q-text-container").innerHTML = q.enonce;
+                
+                document.getElementById("ans-value").value = "";
+                document.getElementById("ans-value").focus();
+                
+                const progress = (currentIndex / 10) * 100;
+                document.getElementById("progress-fill").style.width = progress + "%";
+            } catch (err) {
+                alert("Erreur au chargement de la question : " + err.message);
+            }
+        }
+
+        function submitAnswer() {
+            try {
+                const q = quizQuestions[currentIndex];
+                const userAns = document.getElementById("ans-value").value;
+                
+                if (userAns.trim() === "") {
+                    alert("N'oublie pas d'entrer ta réponse.");
+                    return;
+                }
+
+                const cleanedUser = clean(userAns);
+                const cleanedCorrect = clean(q.correctValue);
+                
+                let isCorrect = (cleanedUser === cleanedCorrect);
+                
+                if (!isCorrect && q.correctValueAlternative) {
+                    isCorrect = (cleanedUser === clean(q.correctValueAlternative));
+                }
+
+                q.savedDisplay = userAns.trim();
+                q.isCorrect = isCorrect;
+                
+                if (isCorrect) score++;
+
+                currentIndex++;
+                loadQuestion();
+            } catch (err) {
+                alert("Erreur à la validation : " + err.message);
+            }
+        }
+
+        function skipQuestion() {
+            try {
+                const q = quizQuestions[currentIndex];
+                q.isCorrect = false;
+                q.savedDisplay = "<span style='color:#64748b;'>Passée</span>";
+                currentIndex++;
+                loadQuestion();
+            } catch (err) {
+                alert("Erreur lors du passage de question : " + err.message);
+            }
+        }
+
+        function endTest() {
+            try {
+                isQuizActive = false;
+                showPanel("panel-results");
+                document.getElementById("res-name").innerText = studentName;
+                document.getElementById("res-grade").innerText = `${score} / 10`;
+                
+                if (score >= 8) document.getElementById("res-grade").style.color = "#2ecc71";
+                else if (score >= 5) document.getElementById("res-grade").style.color = "#e67e22";
+                else document.getElementById("res-grade").style.color = "#e74c3c";
+
+                const tableBody = document.getElementById("bilan-table-body");
+                tableBody.innerHTML = ""; 
+
+                quizQuestions.forEach(q => {
+                    const row = document.createElement("tr");
+                    row.className = q.isCorrect ? "row-correct" : "row-incorrect";
+
+                    const isAngleType = q.enonce.includes("mesure de l'angle");
+                    const unit = isAngleType ? '°' : ' cm';
+
+                    const correctBadge = q.isCorrect 
+                        ? '<span class="badge badge-success">Juste !</span>' 
+                        : `<strong>Correction :</strong> ${formatFR(q.correctValue)}${unit}`;
+
+                    row.innerHTML = `
+                        <td><strong>${q.type}</strong></td>
+                        <td style="font-size:1.05em; text-align:left; color:#334155;">
+                            ${q.enonce}
+                        </td>
+                        <td style="font-size:1.2em; font-weight:bold;">${q.savedDisplay}</td>
+                        <td style="text-align:left; font-size:0.95em;">
+                            <div style="margin-bottom:8px;">${correctBadge}</div>
+                            <div style="border-top:1px dashed #cbd5e1; padding-top:5px; font-size:0.9em; color:#475569;">
+                                ${q.explanation}
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (err) {
+                alert("Erreur à la fin du test : " + err.message);
+            }
+        }
+
+        window.addEventListener("beforeunload", function (e) {
+            if (isQuizActive) {
+                e.preventDefault();
+                e.returnValue = "Attention, si vous actualisez, votre progression sera perdue.";
+            }
+        });
+
+        document.getElementById("ans-value").addEventListener("keyup", function(e) { 
+            if (e.key === "Enter") submitAnswer(); 
+        });
+    </script>
+</body>
+</html>
